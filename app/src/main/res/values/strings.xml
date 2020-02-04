@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">LabsApp</string>
+    <string name="app_name">Lab2_SunWuChoi</string>
+    <string name="title">First App</string>
+    <string name="course_name_label">Course Name:</string>
+    <string name="course_name">Mobile Application Development</string>
+    <string name="course_number_label">Course Number:</string>
+    <string name="course_number">COSC435:</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="cancel">Cancel</string>
 </resources>
+
