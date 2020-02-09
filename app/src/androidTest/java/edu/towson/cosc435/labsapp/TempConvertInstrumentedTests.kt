@@ -36,7 +36,7 @@ class TempConvertInstrumentedTests {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = ApplicationProvider.getApplicationContext<Application>()
-        assertEquals("edu.towson.cosc431.labsapp", appContext.packageName)
+        assertEquals("edu.towson.cosc435.labsapp", appContext.packageName)
     }
 
     @Test
