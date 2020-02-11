@@ -68,5 +68,16 @@ class TempConvertInstrumentedTests {
     fun testFahrenheitToCelsius() {
         // TODO - 8. Write a test for converting fahrenheit to celsius
         // this test should be very similar to the testCelsiusToFahrenheit test above
+        onView(withId(R.id.input_temp_et))
+            .perform(typeText("60")).perform(closeSoftKeyboard())
+        onView(withId(R.id.f2c_radio_btn))
+            .perform(click())
+        onView(withId(R.id.convert_btn))
+            .perform(click())
+
+        onView(withId(R.id.result_tv))
+            .check(matches(withText("15.5556")))
+
+
     }
 }

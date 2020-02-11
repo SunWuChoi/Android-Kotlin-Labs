@@ -40,6 +40,8 @@ class TemperatureConvertTests {
 
     @Test
     fun convertC2F_random() {
-        // TODO - 9. Write one more unit test to test a random conversion
+        val result = convertTemp(60.0, ConvertType.C2F)
+
+        assertEquals(140.0, result, 0.00001)
     }
 }

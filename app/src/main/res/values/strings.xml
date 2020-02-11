@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Temperature Converter</string>
+    <string name="app_name">Lab3_SunWu Choi</string>
     <string name="f2c_title">Convert F to C</string>
     <string name="c2f_title">Convert C to F</string>
     <string name="original_temp_label">Original Temp:</string>
