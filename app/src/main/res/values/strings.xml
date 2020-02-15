@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">LabsApp</string>
+    <string name="prev_btn_txt">Prev</string>
+    <string name="songs_list_is_empty_txt">Songs list is empty</string>
+    <string name="next_btn_txt">Next</string>
+    <string name="name_label">Name:</string>
+    <string name="artist_label">Artist:</string>
+    <string name="track_label">Track:</string>
 </resources>
