@@ -1,3 +1,9 @@
 package edu.towson.cosc435.labsapp.models
 
-// TODO - 1. Create a data class for the Song
+data class Song(
+    val name: String,
+    val artist: String,
+    val album: String,
+    val trackNumber: Int,
+    val isAwesome: Boolean
+)

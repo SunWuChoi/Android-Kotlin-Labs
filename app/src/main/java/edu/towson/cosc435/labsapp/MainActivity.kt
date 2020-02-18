@@ -2,23 +2,74 @@ package edu.towson.cosc435.labsapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import edu.towson.cosc435.labsapp.interfaces.ISongController
+import edu.towson.cosc435.labsapp.interfaces.ISongRepository
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.song_view.*
 
-// TODO - 6. Make the MainActivity implement the ISongController interface
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ISongController {
+    override fun displaySong() {
+        val song = songRepository.getSong(currentSong)
+        songName.text = song.name
+        songArtist.text = song.artist
+        songTrackNum.text = song.trackNumber.toString()
+        isAwesomeCb.isChecked = song.isAwesome
+    }
 
-    // TODO - 7. define some instance variables to hold the state
+    override fun nextSong() {
+        if(currentSong < songRepository.getCount() - 1 ) {
+            currentSong++
+            displaySong()
+        }
+    }
+
+    override fun prevSong() {
+        if(currentSong > 0) {
+            currentSong--
+            displaySong()
+        }
+    }
+
+    override fun deleteSong() {
+       songRepository.deleteSong(currentSong)
+        if(currentSong == songRepository.getCount()){
+            currentSong--
+        }
+        if(songRepository.getCount() > 0) {
+            displaySong()
+        } else {
+            displayEmptyView()
+        }
+    }
+
+    private fun displayEmptyView() {
+        songLayout.visibility = View.GONE
+        emptyView.visibility = View.VISIBLE
+    }
+
+    override fun toggleAwesome() {
+        val oldSong = songRepository.getSong(currentSong)
+        val newSong = oldSong.copy(isAwesome = !oldSong.isAwesome)
+        songRepository.replaceSong(currentSong, newSong)
+        displaySong()
+    }
+
     // 1. an integer to hold the current song index, 2. the song repository
+    private var currentSong: Int = 0
+    private lateinit var songRepository: ISongRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // TODO - 4. create a new file to hold the SongRepository
-        // TODO - 5. Create a SongRepository class and implement ISongRepository
-        // TODO - 8. initialize the SongRepository
-        // TODO - 9. display the current song (song 0)
-        // TODO - 10. set up click listeners for the delete button, previous button, next button and checkbox
+        songRepository = SongRepository()
+        displaySong()
+
         // these listeners should call the respective interface methods
-        // TODO - 11. Implement all the methods
+        buttonPrev.setOnClickListener { prevSong() }
+        buttonNext.setOnClickListener { nextSong() }
+        deleteButton.setOnClickListener { deleteSong() }
+        isAwesomeCb.setOnClickListener { toggleAwesome() }
     }
 }

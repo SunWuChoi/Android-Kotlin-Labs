@@ -1,6 +1,7 @@
 package edu.towson.cosc435.labsapp.interfaces
 
-// TODO - 3. Define the song repository
+import edu.towson.cosc435.labsapp.models.Song
+
 // The song repository is an abstract collection of Songs
 // We will need methods for:
 // getting the number of songs, getting a song by index,
@@ -9,4 +10,8 @@ package edu.towson.cosc435.labsapp.interfaces
 
 interface ISongRepository {
     fun getCount(): Int
+    fun getSong(idx: Int): Song
+    fun getSongs(): List<Song>
+    fun deleteSong(idx: Int)
+    fun replaceSong(idx: Int, song: Song)
 }

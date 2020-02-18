@@ -3,6 +3,10 @@ package edu.towson.cosc435.labsapp
 import android.app.Application
 import androidx.test.InstrumentationRegistry
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
 
@@ -11,6 +15,7 @@ import org.junit.runner.RunWith
 
 import org.junit.Assert.*
 import org.junit.Rule
+
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -25,6 +30,19 @@ class SongsAppInstrumentedTest {
 
     @Test
     fun next_button_displays_next_song() {
-        // TODO - 13. write a test to verify that clicking the next button will display the 2nd song
+        onView(withId(R.id.songName)).check(matches(withText("Song0")))
+
+        onView(withId(R.id.buttonNext)).perform(click())
+
+        onView(withId(R.id.songName)).check(matches(withText("Song1")))
+    }
+
+    @Test
+    fun is_awesome_checkbox_correctly_checked() {
+        onView(withId(R.id.isAwesomeCb)).check(matches(isChecked()))
+
+        onView(withId(R.id.buttonNext)).perform(click())
+
+        onView(withId(R.id.isAwesomeCb)).check(matches(isNotChecked()))
     }
 }
