@@ -1,24 +1,80 @@
-package edu.towson.cosc435.labsapp
+package edu.towson.cosc431.labsapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import edu.towson.cosc431.labsapp.interfaces.ISongController
+import edu.towson.cosc431.labsapp.interfaces.ISongRepository
+import edu.towson.cosc431.labsapp.models.Song
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.song_view.*
 
-// TODO - 6. Make the MainActivity implement the ISongController interface
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ISongController {
 
-    // TODO - 7. define some instance variables to hold the state
-    // 1. an integer to hold the current song index, 2. the song repository
+    // TODO - 2. Implement the new ISongController method for launching the add song screen
+    // TODO - 3. Add a button in activity_main.xml with text=Add Song
+    // TODO - 5. Commit your work. "git add ." then "git commit -m 'Finished lab5 part1'
+    // TODO - 6. Do "git checkout lab5_part2" then continue with the next set of instructions
+
+    override fun nextSong() {
+        if(currentSongIndex >= songs.getCount() - 1) return
+        currentSongIndex++
+        displaySong()
+    }
+
+    override fun prevSong() {
+        if(currentSongIndex <= 0) return
+        currentSongIndex--
+        displaySong()
+    }
+
+    override fun deleteSong() {
+        val current = songs.getSong(currentSongIndex)
+        songs.remove(current)
+        if(currentSongIndex >= songs.getCount()) {
+            currentSongIndex = songs.getCount() - 1
+        }
+        if(songs.getCount() == 0) displayNoSongs()
+        else displaySong()
+    }
+
+    override fun toggleAwesome() {
+        val song = songs.getSong(currentSongIndex)
+        val newSong = song.copy(isAwesome = !song.isAwesome)
+        songs.replace(currentSongIndex, newSong)
+    }
+
+    override fun displaySong(song: Song) {
+        songName.text = song.name
+        songArtist.text = song.artist
+        songTrackNum.text = song.trackNum.toString()
+        isAwesomeCb.isChecked = song.isAwesome
+    }
+
+    lateinit var songs: ISongRepository
+    var currentSongIndex = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // TODO - 4. create a new file to hold the SongRepository
-        // TODO - 5. Create a SongRepository class and implement ISongRepository
-        // TODO - 8. initialize the SongRepository
-        // TODO - 9. display the current song (song 0)
-        // TODO - 10. set up click listeners for the delete button, previous button, next button and checkbox
-        // these listeners should call the respective interface methods
-        // TODO - 11. Implement all the methods
+        songs = SongRepository()
+        displaySong()
+        buttonNext.setOnClickListener { nextSong() }
+        buttonPrev.setOnClickListener { prevSong() }
+        deleteButton.setOnClickListener { deleteSong() }
+        isAwesomeCb.setOnClickListener { toggleAwesome() }
+        // TODO - 4. Add an onClickListener that calls the launch new song method
+    }
+
+    private fun displaySong() {
+        val song = songs.getSong(currentSongIndex)
+        displaySong(song)
+    }
+
+    private fun displayNoSongs() {
+        songLayout.visibility = View.GONE
+        buttonPanel.visibility = View.GONE
+        emptyView.visibility = View.VISIBLE
     }
 }

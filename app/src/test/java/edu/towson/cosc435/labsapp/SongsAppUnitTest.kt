@@ -1,5 +1,6 @@
-package edu.towson.cosc435.labsapp
+package edu.towson.cosc431.labsapp
 
+import edu.towson.cosc431.labsapp.models.Song
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -11,7 +12,13 @@ import org.junit.Assert.*
  */
 class SongsAppUnitTest {
     @Test
-    fun songs_repo_replace_works() {
-        // TODO - 12. Test that the SOngsRepository .replace method works as expected
+    fun repo_replace_works() {
+        val songs = SongRepository()
+        val song = Song("Test1", "", 1, false)
+        songs.replace(0, song)
+
+        val replaced = songs.getSong(0)
+
+        assertEquals(replaced.name, song.name)
     }
 }

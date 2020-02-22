@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="edu.towson.cosc435.labsapp">
+          package="edu.towson.cosc431.labsapp">
 
     <application
             android:allowBackup="true"
