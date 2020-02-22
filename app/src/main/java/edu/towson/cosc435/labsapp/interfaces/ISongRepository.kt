@@ -1,6 +1,6 @@
-package edu.towson.cosc431.labsapp.interfaces
+package edu.towson.cosc435.labsapp.interfaces
 
-import edu.towson.cosc431.labsapp.models.Song
+import edu.towson.cosc435.labsapp.models.Song
 
 // The song repository is an abstract collection of Songs
 // We will need methods for:

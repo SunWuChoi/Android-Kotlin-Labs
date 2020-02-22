@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.towson.labsapp.MainActivity"
+    tools:context=".MainActivity"
     tools:layout_editor_absoluteY="81dp"
     tools:layout_editor_absoluteX="0dp">
 
@@ -24,23 +24,30 @@
 
     <LinearLayout
             android:id="@+id/buttonPanel"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/buttonPrev"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/prev_btn_txt" />
+            android:orientation="horizontal">
 
         <Button
-            android:id="@+id/buttonNext"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/next_btn_txt" />
+                android:id="@+id/buttonPrev"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/prev_btn_txt" />
+
+        <Button
+                android:id="@+id/buttonNext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/next_btn_txt" />
     </LinearLayout>
+
+    <Button
+            android:id="@+id/add_song_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/add_song_btn_txt" />
 
 </LinearLayout>

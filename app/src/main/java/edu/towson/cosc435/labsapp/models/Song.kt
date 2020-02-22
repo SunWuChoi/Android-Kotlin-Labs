@@ -1,4 +1,4 @@
-package edu.towson.cosc431.labsapp.models
+package edu.towson.cosc435.labsapp.models
 
 data class Song (
     val name: String,

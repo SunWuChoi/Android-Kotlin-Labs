@@ -1,6 +1,6 @@
-package edu.towson.cosc431.labsapp.interfaces
+package edu.towson.cosc435.labsapp.interfaces
 
-import edu.towson.cosc431.labsapp.models.Song
+import edu.towson.cosc435.labsapp.models.Song
 
 // We should have a method for every action our controller should take
 // the actions our controller should handle are:
@@ -13,5 +13,5 @@ interface ISongController {
     fun deleteSong()
     fun toggleAwesome()
     fun displaySong(song: Song)
-    // TODO - 1. Add a new method for launching the AddSong screen
+    fun launchAddSongScreen()
 }

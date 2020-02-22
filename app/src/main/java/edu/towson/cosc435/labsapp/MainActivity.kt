@@ -1,20 +1,18 @@
-package edu.towson.cosc431.labsapp
+package edu.towson.cosc435.labsapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import edu.towson.cosc431.labsapp.interfaces.ISongController
-import edu.towson.cosc431.labsapp.interfaces.ISongRepository
-import edu.towson.cosc431.labsapp.models.Song
+import edu.towson.cosc435.labsapp.interfaces.ISongController
+import edu.towson.cosc435.labsapp.interfaces.ISongRepository
+import edu.towson.cosc435.labsapp.models.Song
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.song_view.*
 
 class MainActivity : AppCompatActivity(), ISongController {
-
-    // TODO - 2. Implement the new ISongController method for launching the add song screen
-    // TODO - 3. Add a button in activity_main.xml with text=Add Song
-    // TODO - 5. Commit your work. "git add ." then "git commit -m 'Finished lab5 part1'
-    // TODO - 6. Do "git checkout lab5_part2" then continue with the next set of instructions
+    override fun launchAddSongScreen() {
+        // TODO - 7. Implement this method to launch the AddSongActivity
+    }
 
     override fun nextSong() {
         if(currentSongIndex >= songs.getCount() - 1) return
@@ -64,7 +62,7 @@ class MainActivity : AppCompatActivity(), ISongController {
         buttonPrev.setOnClickListener { prevSong() }
         deleteButton.setOnClickListener { deleteSong() }
         isAwesomeCb.setOnClickListener { toggleAwesome() }
-        // TODO - 4. Add an onClickListener that calls the launch new song method
+        add_song_button.setOnClickListener { launchAddSongScreen() }
     }
 
     private fun displaySong() {

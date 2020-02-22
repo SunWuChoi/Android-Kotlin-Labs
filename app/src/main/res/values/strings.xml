@@ -6,4 +6,10 @@
     <string name="name_label">Name:</string>
     <string name="artist_label">Artist:</string>
     <string name="track_label">Track:</string>
+    <string name="add_song_btn_txt">Add Song</string>
+    <string name="add_song_screen_title">Add Song</string>
+    <string name="addsong_is_awesome_label">Is Awesome</string>
+    <string name="addsong_track_num_label">Track Num:</string>
+    <string name="addsong_artist_label">Artist:</string>
+    <string name="addsong_name_label">Name:</string>
 </resources>
