@@ -1,4 +1,4 @@
-package edu.towson.cosc435.labsapp
+package edu.towson.cosc431.labsapp
 
 import android.app.Application
 import androidx.test.InstrumentationRegistry
@@ -33,7 +33,7 @@ class SongsAppInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = ApplicationProvider.getApplicationContext<Application>()
-        assertEquals("edu.towson.cosc435.labsapp", appContext.packageName)
+        assertEquals("edu.towson.cosc431.labsapp", appContext.packageName)
     }
 
     @Test

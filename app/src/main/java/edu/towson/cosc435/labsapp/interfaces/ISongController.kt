@@ -13,5 +13,9 @@ interface ISongController {
     fun deleteSong()
     fun toggleAwesome()
     fun displaySong(song: Song)
-    fun launchAddSongScreen()
+    fun launchNewSongScreen()
+    // TODO - 1. remove nextSong, prevSong and displaySong
+    // TODO - 2. add an idx:Int parameter to deleteSong and toggleAwesome
+    // TODO - 3. Add a val songs: ISongRespository property
+    // TODO - 13. (OPTIONAL) add editSong(idx: Int)
 }

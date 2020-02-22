@@ -1,7 +1,12 @@
 package edu.towson.cosc435.labsapp
 
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.google.gson.Gson
+import edu.towson.cosc435.labsapp.models.Song
+import kotlinx.android.synthetic.main.activity_add_song.*
 
 class AddSongActivity : AppCompatActivity() {
 
@@ -9,11 +14,37 @@ class AddSongActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_song)
 
-        // TODO - 8. Add a click listener to the add_song_btn
-        // TODO - 9. In the callback, create a new Intent
-        // TODO - 10. Create a Song object from the fields in the view
-        // TODO - 11. Serialize the Song into a JSON object using GSON and put it into the Intent (intent.putString()...)
-        // TODO - 12. Call setResult() with the intent from step 8-9 and RESULT_OK
-        // TODO - 13. Call finish() to end the current Activity
+        // TODO - 15. (OPTIONAL) Handle editing a song
+
+        addSongBtn.setOnClickListener { handleAddSongClick() }
+    }
+
+    private fun handleAddSongClick() {
+        val intent = Intent()
+
+        val trackNum = try {
+            songTrackEt.editableText.toString().toInt()
+        } catch (e: Exception) {
+            0
+        }
+
+        val song = Song(
+            name = songNameEt.editableText.toString(),
+            artist = songArtistEt.editableText.toString(),
+            isAwesome = songIsAwesomeCb.isChecked,
+            trackNum = trackNum
+        )
+
+        val json: String = Gson().toJson(song)
+
+        intent.putExtra(SONG_KEY, json)
+
+        setResult(Activity.RESULT_OK, intent)
+
+        finish()
+    }
+
+    companion object {
+        val SONG_KEY = "SONG_EXTRA"
     }
 }

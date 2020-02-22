@@ -11,6 +11,10 @@ class SongRepository : ISongRepository {
         songs.addAll(seed)
     }
 
+    override fun addSong(song: Song) {
+        songs.add(song)
+    }
+
     override fun getCount(): Int {
         return songs.size
     }

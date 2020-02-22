@@ -14,4 +14,5 @@ interface ISongRepository {
     fun getAll(): List<Song>
     fun remove(song: Song)
     fun replace(idx: Int, song: Song)
+    fun addSong(song: Song)
 }
