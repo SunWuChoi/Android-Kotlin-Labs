@@ -4,6 +4,10 @@ import edu.towson.cosc435.labsapp.interfaces.ISongRepository
 import edu.towson.cosc435.labsapp.models.Song
 
 class SongRepository : ISongRepository {
+    override fun addSong(song: Song) {
+        songs.add(song)
+    }
+
     private var songs: MutableList<Song> = mutableListOf()
 
     init {

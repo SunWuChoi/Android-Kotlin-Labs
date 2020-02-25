@@ -12,4 +12,6 @@
     <string name="addsong_track_num_label">Track Num:</string>
     <string name="addsong_artist_label">Artist:</string>
     <string name="addsong_name_label">Name:</string>
+    <string name="invalid_track_msg">Invalid track number</string>
+    <string name="user_canceled_msg">User canceled. No song added</string>
 </resources>
