@@ -10,9 +10,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.song_view.*
 
 class MainActivity : AppCompatActivity(), ISongController {
+    override fun launchNewSongScreen() {
 
-    // TODO - 2. Implement the new ISongController method for launching the add song screen
-    // TODO - 3. Add a button in activity_main.xml with text=Add Song
+    }
+
+
+
     // TODO - 5. Commit your work. "git add ." then "git commit -m 'Finished lab5 part1'
     // TODO - 6. Do "git checkout lab5_part2" then continue with the next set of instructions
 

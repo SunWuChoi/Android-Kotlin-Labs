@@ -13,5 +13,5 @@ interface ISongController {
     fun deleteSong()
     fun toggleAwesome()
     fun displaySong(song: Song)
-    // TODO - 1. Add a new method for launching the AddSong screen
+    fun launchNewSongScreen()
 }
