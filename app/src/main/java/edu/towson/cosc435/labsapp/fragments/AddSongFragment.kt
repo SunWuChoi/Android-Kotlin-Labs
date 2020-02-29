@@ -19,7 +19,7 @@ class AddSongFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // TODO - 3. Inflate and return the fragment_add_song view.
+        // TODO - 2. Inflate and return the fragment_add_song view.
         return TextView(activity).apply {
             setText(R.string.hello_blank_fragment)
         }
