@@ -12,4 +12,7 @@
     <string name="addsong_track_num_label">Track Num:</string>
     <string name="addsong_artist_label">Artist:</string>
     <string name="addsong_name_label">Name:</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
