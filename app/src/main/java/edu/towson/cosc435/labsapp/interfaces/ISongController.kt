@@ -8,14 +8,10 @@ import edu.towson.cosc435.labsapp.models.Song
 // marking/unmarking a song as awesome, and displaying the current song
 
 interface ISongController {
-    fun nextSong()
-    fun prevSong()
-    fun deleteSong()
-    fun toggleAwesome()
-    fun displaySong(song: Song)
+    fun deleteSong(idx: Int)
+    fun toggleAwesome(idx: Int)
     fun launchNewSongScreen()
-    // TODO - 1. remove nextSong, prevSong and displaySong
-    // TODO - 2. add an idx:Int parameter to deleteSong and toggleAwesome
-    // TODO - 3. Add a val songs: ISongRespository property
+    val songs: ISongRepository
+
     // TODO - 13. (OPTIONAL) add editSong(idx: Int)
 }

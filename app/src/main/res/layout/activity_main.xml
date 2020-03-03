@@ -9,39 +9,15 @@
     tools:layout_editor_absoluteY="81dp"
     tools:layout_editor_absoluteX="0dp">
 
-    <TextView
-        android:id="@+id/emptyView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
-        android:padding="20dp"
-        android:text="@string/songs_list_is_empty_txt"
-        android:textSize="24sp"
-        android:visibility="gone" />
-
     <!-- reusable layout -->
-    <include layout="@layout/song_view"/>
 
-    <LinearLayout
-            android:id="@+id/buttonPanel"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/buttonPrev"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/prev_btn_txt" />
-
-        <Button
-            android:id="@+id/buttonNext"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/next_btn_txt" />
-    </LinearLayout>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        tools:itemCount="10"
+        tools:listitem="@layout/song_view" />
 
     <Button
             android:id="@+id/add_song_btn"
