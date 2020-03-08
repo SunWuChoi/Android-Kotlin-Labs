@@ -12,5 +12,6 @@ interface ISongController {
     fun toggleAwesome(idx: Int)
     fun launchNewSongScreen()
     val songs: ISongRepository
-    // TODO - 7. Add a new method for adding a song: addNewSong(song: Song)
+    fun addNewSong(song: Song)
+    // TODO - 6. Add methods for handling editing (4 methods)
 }

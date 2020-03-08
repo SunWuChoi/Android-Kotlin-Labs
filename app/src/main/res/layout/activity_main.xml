@@ -1,27 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- TODO - 4. Remove and replace with a FrameLayout id=fragment_container -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- TODO - 1b. Use a navhost fragment -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+    android:id="@+id/fragment_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     tools:layout_editor_absoluteY="81dp"
     tools:layout_editor_absoluteX="0dp">
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        tools:itemCount="10"
-        tools:listitem="@layout/song_view" />
-
-    <Button
-        android:id="@+id/add_song_btn"
-        android:text="@string/add_song_btn_txt"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-</LinearLayout>
+</FrameLayout>

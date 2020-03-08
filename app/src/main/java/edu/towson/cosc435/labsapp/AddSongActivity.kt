@@ -14,11 +14,9 @@ class AddSongActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_song)
 
-        // TODO - 12a. Copy this to onViewCreated in AddSongFragment
         addSongBtn.setOnClickListener { handleAddSongClick() }
     }
 
-    // TODO - 11a. Copy this function to AddSongFragment
     private fun handleAddSongClick() {
         val intent = Intent()
 
