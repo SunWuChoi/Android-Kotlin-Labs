@@ -1,6 +1,7 @@
 package edu.towson.cosc435.labsapp.fragments
 
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,6 +10,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import edu.towson.cosc435.labsapp.R
 import edu.towson.cosc435.labsapp.interfaces.ISongController
+import edu.towson.cosc435.labsapp.models.Song
+import kotlinx.android.synthetic.main.fragment_add_song.*
+import java.lang.Exception
 
 /**
  * A simple [Fragment] subclass.
@@ -19,22 +23,41 @@ class AddSongFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // TODO - 2. Inflate and return the fragment_add_song view.
-        return TextView(activity).apply {
-            setText(R.string.hello_blank_fragment)
-        }
+        return inflater.inflate(R.layout.fragment_add_song, container, false)
     }
 
-    // TODO - 10. Initialize this property in onAttach by casting the context object
     private lateinit var songController: ISongController
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        when(context) {
+            is ISongController -> songController = context as ISongController
+            else -> throw Exception("ISongController expected")
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // TODO - 12b. Paste 12a
+        addSongBtn.setOnClickListener { handleAddSongClick() }
     }
 
-    // TODO - 11b. Paste handleAddSongClick
+    private fun handleAddSongClick() {
+        val trackNum = try {
+            songTrackEt.editableText.toString().toInt()
+        } catch (e: Exception) {
+            0
+        }
 
-    // TODO - 13. Remove Intents in handleAddSongClick and call songController.addNewSong(song) with the new song
+        val song = Song(
+            name = songNameEt.editableText.toString(),
+            artist = songArtistEt.editableText.toString(),
+            isAwesome = songIsAwesomeCb.isChecked,
+            trackNum = trackNum
+        )
+
+        songController.addNewSong(song)
+    }
+
 }

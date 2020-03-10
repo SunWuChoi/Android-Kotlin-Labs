@@ -14,11 +14,9 @@ class AddSongActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_song)
 
-        // TODO - 12a. Copy this to onViewCreated in AddSongFragment
         addSongBtn.setOnClickListener { handleAddSongClick() }
     }
 
-    // TODO - 11a. Copy this function to AddSongFragment
     private fun handleAddSongClick() {
         val intent = Intent()
 
@@ -34,15 +32,8 @@ class AddSongActivity : AppCompatActivity() {
             isAwesome = songIsAwesomeCb.isChecked,
             trackNum = trackNum
         )
-
-        val json: String = Gson().toJson(song)
-
-        intent.putExtra(SONG_KEY, json)
-
-        setResult(Activity.RESULT_OK, intent)
-
-        finish()
     }
+
 
     companion object {
         val SONG_KEY = "SONG_EXTRA"
