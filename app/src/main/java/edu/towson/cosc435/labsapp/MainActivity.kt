@@ -2,10 +2,12 @@ package edu.towson.cosc435.labsapp
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import edu.towson.cosc435.labsapp.fragments.AddSongFragment
@@ -14,24 +16,25 @@ import edu.towson.cosc435.labsapp.interfaces.ISongController
 import edu.towson.cosc435.labsapp.interfaces.ISongRepository
 import edu.towson.cosc435.labsapp.models.Song
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_song_list.*
 
 class MainActivity : AppCompatActivity(), ISongController {
 
     override fun launchNewSongScreen() {
-        // TODO - 4. Replace with a fragment navigation to the addsongfragment
-        // Use the SupportFragmentManager to replace the fragment_container with the AddSongFragment
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.fragment_container, AddSongFragment())
-            .addToBackStack(null)
-            .commit()
+        if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            findNavController(R.id.nav_host_fragment)
+                .navigate(R.id.action_songListFragment_to_addSongFragment)
+        }
     }
 
     override fun addNewSong(song: Song) {
         songs.addSong(song)
-        // TODO - 5. Replace with a fragment navigation to the songlistfragment
-        supportFragmentManager
-            .popBackStack()
+        if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            findNavController(R.id.nav_host_fragment)
+                .popBackStack()
+        } else {
+            recyclerView.adapter?.notifyDataSetChanged()
+        }
     }
 
     override fun deleteSong(idx: Int) {
@@ -45,12 +48,46 @@ class MainActivity : AppCompatActivity(), ISongController {
         songs.replace(idx, newSong)
     }
 
+    override fun editSong(idx: Int) {
+        val song = songs.getSong(idx)
+        editingSong = song
+        editingSongIdx = idx
+
+        if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT){
+            findNavController(R.id.nav_host_fragment)
+                .navigate(R.id.action_songListFragment_to_addSongFragment)
+        } else {
+            (addSongFragment as AddSongFragment).populateSong()
+        }
+    }
+
+    override fun getSongForEdit(): Song? {
+        return editingSong
+    }
+
+    override fun clearEditedSong() {
+        editingSong = null
+        editingSongIdx = -1
+    }
+
+    override fun handleEditedSong(song: Song) {
+        songs.replace(editingSongIdx, song)
+        if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            findNavController(R.id.nav_host_fragment)
+                .popBackStack()
+        } else {
+            recyclerView.adapter?.notifyItemChanged(editingSongIdx)
+        }
+
+
+        clearEditedSong()
+    }
+
+
     override lateinit var songs: ISongRepository
-    // TODO - 8. Keep track of editing song state
+    private var editingSong: Song? = null
+    private var editingSongIdx: Int = -1
 
-    // TODO - 7. Implement methods for editing a song
-
-    // TODO - 10. add landscape layouts for dislpaying both fragments at the same time
 
     // TODO - 11. (OPTIONAL!) - Implement shared view transitions
 
@@ -58,40 +95,7 @@ class MainActivity : AppCompatActivity(), ISongController {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // TODO - 1a. create a navigation graph resource
-
         songs = SongRepository()
-
-        // TODO - 2. Remove the following. Create a fragment navigation instead
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.fragment_container, SongListFragment())
-            .commit()
     }
 
-    // TODO - 3. Remove
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when(requestCode) {
-            ADD_SONG_REQUEST_CODE -> {
-                when(resultCode) {
-                    Activity.RESULT_OK -> {
-                        // handle the result
-                        val json = data?.getStringExtra(AddSongActivity.SONG_KEY)
-
-                        val song = Gson().fromJson(json, Song::class.java)
-
-                        songs.addSong(song)
-                    }
-                    Activity.RESULT_CANCELED -> {
-                        Toast.makeText(this, "Use cancelled", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        }
-    }
-
-    companion object {
-        val ADD_SONG_REQUEST_CODE = 1
-    }
 }

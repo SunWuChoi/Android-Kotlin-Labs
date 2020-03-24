@@ -13,5 +13,8 @@ interface ISongController {
     fun launchNewSongScreen()
     val songs: ISongRepository
     fun addNewSong(song: Song)
-    // TODO - 6. Add methods for handling editing (4 methods)
+    fun editSong(idx: Int)
+    fun getSongForEdit(): Song?
+    fun handleEditedSong(song: Song)
+    fun clearEditedSong()
 }
