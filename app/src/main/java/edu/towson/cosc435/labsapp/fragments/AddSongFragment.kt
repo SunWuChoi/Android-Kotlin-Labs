@@ -14,11 +14,7 @@ import edu.towson.cosc435.labsapp.AddSongActivity
 import edu.towson.cosc435.labsapp.R
 import edu.towson.cosc435.labsapp.interfaces.ISongController
 import edu.towson.cosc435.labsapp.models.Song
-import kotlinx.android.synthetic.main.fragment_add_song.addSongBtn
-import kotlinx.android.synthetic.main.fragment_add_song.songArtistEt
-import kotlinx.android.synthetic.main.fragment_add_song.songIsAwesomeCb
-import kotlinx.android.synthetic.main.fragment_add_song.songNameEt
-import kotlinx.android.synthetic.main.fragment_add_song.songTrackEt
+import kotlinx.android.synthetic.main.fragment_add_song.*
 import java.lang.Exception
 
 /**
@@ -49,7 +45,30 @@ class AddSongFragment : Fragment() {
 
         addSongBtn.setOnClickListener { handleAddSongClick() }
 
-        // TODO - 9. Determine editing state
+        val song = songController.getSongForEdit()
+        populateSongForm(song)
+    }
+
+    private fun populateSongForm(song: Song?) {
+        if(song != null) {
+            clearForm()
+            songNameEt.editableText.insert(0, song.name)
+            songArtistEt.editableText.insert(0, song.artist)
+            songTrackEt.editableText.insert(0, song.trackNum.toString())
+            songIsAwesomeCb.isChecked = song.isAwesome
+            addSongTitle?.text = "Edit Song"
+            addSongBtn.text = "Edit Song"
+        } else {
+            addSongTitle?.text = resources.getString(R.string.add_song_btn_txt)
+            addSongBtn.text = resources.getString(R.string.add_song_btn_txt)
+        }
+    }
+
+    private fun clearForm() {
+        songNameEt.editableText.clear()
+        songArtistEt.editableText.clear()
+        songTrackEt.editableText.clear()
+        songIsAwesomeCb.isChecked = false
     }
 
     private fun handleAddSongClick() {
@@ -66,7 +85,18 @@ class AddSongFragment : Fragment() {
             trackNum = trackNum
         )
 
-        // TODO - 10. Handle edit
-        songController.addNewSong(song)
+        if(songController.getSongForEdit() == null) {
+            songController.addNewSong(song)
+        } else {
+            songController.handleEditedSong(song)
+            addSongBtn.text = resources.getString(R.string.add_song_btn_txt)
+        }
+
+        clearForm()
+    }
+
+    fun populateSong() {
+        val song = songController.getSongForEdit()
+        populateSongForm(song)
     }
 }

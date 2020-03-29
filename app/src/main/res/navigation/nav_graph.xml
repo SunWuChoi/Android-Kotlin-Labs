@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph"
+    app:startDestination="@id/songListFragment">
+
+    <fragment
+        android:id="@+id/songListFragment"
+        android:name="edu.towson.cosc435.labsapp.fragments.SongListFragment"
+        android:label="SongListFragment" >
+        <action
+            android:id="@+id/action_songListFragment_to_addSongFragment"
+            app:destination="@id/addSongFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addSongFragment"
+        android:name="edu.towson.cosc435.labsapp.fragments.AddSongFragment"
+        android:label="AddSongFragment" >
+        <action
+            android:id="@+id/action_addSongFragment_to_songListFragment"
+            app:destination="@id/songListFragment" />
+    </fragment>
+</navigation>

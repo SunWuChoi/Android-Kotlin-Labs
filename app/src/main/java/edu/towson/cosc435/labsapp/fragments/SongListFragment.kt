@@ -47,7 +47,7 @@ class SongListFragment : Fragment() {
 
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        add_song_btn.setOnClickListener { songController.launchNewSongScreen() }
+        add_song_btn?.setOnClickListener { songController.launchNewSongScreen() }
     }
 
 }

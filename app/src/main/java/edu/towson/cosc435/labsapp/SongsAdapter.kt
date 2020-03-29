@@ -23,6 +23,10 @@ class SongsAdapter(private val controller: ISongController) : RecyclerView.Adapt
             controller.toggleAwesome(position)
             this.notifyItemChanged(position)
         }
+        view.setOnClickListener {
+            val position = viewHolder.adapterPosition
+            controller.editSong(position)
+        }
 
         return viewHolder
     }
