@@ -15,11 +15,15 @@ class SongsAdapter(private val controller: ISongController) : RecyclerView.Adapt
 
         view.deleteButton.setOnClickListener {
             val position = viewHolder.adapterPosition
+            // TODO - 11. launch coroutine
+            // TODO - 12. surround in try/catch (change alpha while trying and restore on catch)
             controller.deleteSong(position)
             this.notifyItemRemoved(position)
         }
         view.isAwesomeCb.setOnClickListener {
             val position = viewHolder.adapterPosition
+            // TODO - 13. launch coroutine
+            // TODO - 14. surround in try/catch (change alpha while trying and restore on catch)
             controller.toggleAwesome(position)
             this.notifyItemChanged(position)
         }

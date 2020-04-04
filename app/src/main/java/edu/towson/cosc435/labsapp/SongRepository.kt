@@ -2,12 +2,13 @@ package edu.towson.cosc435.labsapp
 
 import edu.towson.cosc435.labsapp.interfaces.ISongRepository
 import edu.towson.cosc435.labsapp.models.Song
+import java.util.*
 
 class SongRepository : ISongRepository {
     private var songs: MutableList<Song> = mutableListOf()
 
     init {
-        val seed = (1..10).map { idx -> Song("Song${idx}", "Artist${idx}", idx, idx % 2 == 0) }
+        val seed = (1..10).map { idx -> Song(UUID.randomUUID(), "Song${idx}", "Artist${idx}", idx, idx % 2 == 0) }
         songs.addAll(seed)
     }
 

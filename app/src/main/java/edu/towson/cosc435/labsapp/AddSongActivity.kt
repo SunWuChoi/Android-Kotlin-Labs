@@ -7,6 +7,7 @@ import android.os.Bundle
 import com.google.gson.Gson
 import edu.towson.cosc435.labsapp.models.Song
 import kotlinx.android.synthetic.main.activity_add_song.*
+import java.util.*
 
 class AddSongActivity : AppCompatActivity() {
 
@@ -27,6 +28,7 @@ class AddSongActivity : AppCompatActivity() {
         }
 
         val song = Song(
+            id = UUID.randomUUID(),
             name = songNameEt.editableText.toString(),
             artist = songArtistEt.editableText.toString(),
             isAwesome = songIsAwesomeCb.isChecked,

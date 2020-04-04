@@ -50,4 +50,5 @@ class SongListFragment : Fragment() {
         add_song_btn?.setOnClickListener { songController.launchNewSongScreen() }
     }
 
+    // TODO - 6. onResume, refresh adapter
 }

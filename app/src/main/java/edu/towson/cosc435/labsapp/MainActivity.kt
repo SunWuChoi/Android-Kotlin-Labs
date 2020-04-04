@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
+import edu.towson.cosc435.labsapp.database.SongDatabaseRepository
 import edu.towson.cosc435.labsapp.fragments.AddSongFragment
 import edu.towson.cosc435.labsapp.fragments.SongListFragment
 import edu.towson.cosc435.labsapp.interfaces.ISongController
@@ -17,8 +18,12 @@ import edu.towson.cosc435.labsapp.interfaces.ISongRepository
 import edu.towson.cosc435.labsapp.models.Song
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_song_list.*
+import kotlinx.coroutines.Dispatchers
 
 class MainActivity : AppCompatActivity(), ISongController {
+    // TODO - 4. Implement CoroutineScope (use lifecycleScope)
+    // TODO - 7. Create methods for hiding and showing spinners (on main thread)
+
 
     override fun launchNewSongScreen() {
         if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -28,6 +33,7 @@ class MainActivity : AppCompatActivity(), ISongController {
     }
 
     override fun addNewSong(song: Song) {
+        // TODO - 8. Wrap in try/catch. Run on IO dispatcher
         songs.addSong(song)
         if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             findNavController(R.id.nav_host_fragment)
@@ -40,12 +46,14 @@ class MainActivity : AppCompatActivity(), ISongController {
 
     override fun deleteSong(idx: Int) {
         val current = songs.getSong(idx)
+        // TODO - 9. Wrap in try/catch. Run on IO dispatcher
         songs.remove(current)
     }
 
     override fun toggleAwesome(idx: Int) {
         val song = songs.getSong(idx)
         val newSong = song.copy(isAwesome = !song.isAwesome)
+        // TODO - 10. Wrap in try/catch. Run on IO dispatcher
         songs.replace(idx, newSong)
     }
 
@@ -93,7 +101,8 @@ class MainActivity : AppCompatActivity(), ISongController {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // TODO - 5. replace with your Database repository
-        songs = SongRepository()
+        songs = SongDatabaseRepository(this)
     }
+
+    // TODO - 5. onStop, cancel any active coroutines
 }

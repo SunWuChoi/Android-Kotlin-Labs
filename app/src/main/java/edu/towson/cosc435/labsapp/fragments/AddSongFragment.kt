@@ -16,6 +16,7 @@ import edu.towson.cosc435.labsapp.interfaces.ISongController
 import edu.towson.cosc435.labsapp.models.Song
 import kotlinx.android.synthetic.main.fragment_add_song.*
 import java.lang.Exception
+import java.util.*
 
 /**
  * A simple [Fragment] subclass.
@@ -79,6 +80,7 @@ class AddSongFragment : Fragment() {
         }
 
         val song = Song(
+            id = getSongId(),
             name = songNameEt.editableText.toString(),
             artist = songArtistEt.editableText.toString(),
             isAwesome = songIsAwesomeCb.isChecked,
@@ -98,5 +100,17 @@ class AddSongFragment : Fragment() {
     fun populateSong() {
         val song = songController.getSongForEdit()
         populateSongForm(song)
+    }
+
+    private fun getSongId(): UUID {
+        val id: UUID
+        val editSong = songController.getSongForEdit()
+        if(editSong == null) {
+            // not editing, generate a new id
+            id = UUID.randomUUID()
+        } else {
+            id = editSong.id
+        }
+        return id
     }
 }
