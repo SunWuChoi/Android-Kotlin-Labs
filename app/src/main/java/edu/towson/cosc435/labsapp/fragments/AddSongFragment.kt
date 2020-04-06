@@ -15,6 +15,7 @@ import edu.towson.cosc435.labsapp.R
 import edu.towson.cosc435.labsapp.interfaces.ISongController
 import edu.towson.cosc435.labsapp.models.Song
 import kotlinx.android.synthetic.main.fragment_add_song.*
+import kotlinx.coroutines.launch
 import java.lang.Exception
 import java.util.*
 
@@ -87,14 +88,20 @@ class AddSongFragment : Fragment() {
             trackNum = trackNum
         )
 
-        if(songController.getSongForEdit() == null) {
-            songController.addNewSong(song)
-        } else {
-            songController.handleEditedSong(song)
-            addSongBtn.text = resources.getString(R.string.add_song_btn_txt)
-        }
+        songController.launch{
+            try {
+                if(songController.getSongForEdit() == null) {
+                    songController.addNewSong(song)
+                } else {
+                    songController.handleEditedSong(song)
+                    addSongBtn.text = resources.getString(R.string.add_song_btn_txt)
+                }
 
-        clearForm()
+
+                clearForm()
+            } catch (e: Exception){
+            }
+        }
     }
 
     fun populateSong() {

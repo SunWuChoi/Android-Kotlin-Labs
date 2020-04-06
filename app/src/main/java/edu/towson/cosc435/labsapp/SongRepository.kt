@@ -12,7 +12,7 @@ class SongRepository : ISongRepository {
         songs.addAll(seed)
     }
 
-    override fun addSong(song: Song) {
+    override suspend fun addSong(song: Song) {
         songs.add(song)
     }
 
@@ -24,15 +24,15 @@ class SongRepository : ISongRepository {
         return songs.get(idx)
     }
 
-    override fun getAll(): List<Song> {
+    override suspend fun getAll(): List<Song> {
         return songs
     }
 
-    override fun remove(song: Song) {
+    override suspend fun remove(song: Song) {
         songs.remove(song)
     }
 
-    override fun replace(idx: Int, song: Song) {
+    override suspend fun replace(idx: Int, song: Song) {
         if(idx >= songs.size) throw Exception("Outside of bounds")
         songs[idx] = song
     }

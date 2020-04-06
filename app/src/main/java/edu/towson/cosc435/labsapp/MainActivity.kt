@@ -5,8 +5,10 @@ import android.content.Intent
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
@@ -19,10 +21,18 @@ import edu.towson.cosc435.labsapp.models.Song
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_song_list.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
 
 class MainActivity : AppCompatActivity(), ISongController {
-    // TODO - 4. Implement CoroutineScope (use lifecycleScope)
-    // TODO - 7. Create methods for hiding and showing spinners (on main thread)
+    private fun showSpinner(){
+        progressBar.visibility = View.VISIBLE
+    }
+
+    private fun hideSpinner() {
+        progressBar.visibility = View.GONE
+    }
 
 
     override fun launchNewSongScreen() {
@@ -32,29 +42,61 @@ class MainActivity : AppCompatActivity(), ISongController {
         }
     }
 
-    override fun addNewSong(song: Song) {
-        // TODO - 8. Wrap in try/catch. Run on IO dispatcher
-        songs.addSong(song)
-        if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            findNavController(R.id.nav_host_fragment)
-                .popBackStack()
-        } else {
-            // update the recyclerview
-            recyclerView.adapter?.notifyDataSetChanged()
+    override suspend fun addNewSong(song: Song) {
+        showSpinner()
+        try {
+            withContext(Dispatchers.IO) {
+               songs.addSong(song)
+            }
+
+            if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                findNavController(R.id.nav_host_fragment)
+                    .popBackStack()
+            } else {
+                // update the recyclerview
+                recyclerView.adapter?.notifyDataSetChanged()
+            }
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Error: ${e.message}")
+            Toast.makeText(this, "Failed to add new song", Toast.LENGTH_SHORT).show()
+            throw e
+        } finally {
+            hideSpinner()
         }
     }
 
-    override fun deleteSong(idx: Int) {
+    override suspend fun deleteSong(idx: Int) {
+        showSpinner()
         val current = songs.getSong(idx)
-        // TODO - 9. Wrap in try/catch. Run on IO dispatcher
-        songs.remove(current)
+        try {
+            withContext(Dispatchers.IO) {
+                songs.remove(current)
+            }
+        } catch (e: Exception){
+            Log.e(TAG, "Error ${e.message}")
+            Toast.makeText(this, "Failed to delete song", Toast.LENGTH_SHORT).show()
+            throw e
+        } finally {
+            hideSpinner()
+        }
+
     }
 
-    override fun toggleAwesome(idx: Int) {
+    override suspend fun toggleAwesome(idx: Int) {
+        showSpinner()
         val song = songs.getSong(idx)
         val newSong = song.copy(isAwesome = !song.isAwesome)
-        // TODO - 10. Wrap in try/catch. Run on IO dispatcher
-        songs.replace(idx, newSong)
+        try {
+            songs.replace(idx, newSong)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error: ${e.message}")
+            Toast.makeText(this, "Failed to update song", Toast.LENGTH_SHORT).show()
+            throw e
+        } finally {
+            hideSpinner()
+        }
+
     }
 
     override fun editSong(idx: Int) {
@@ -80,17 +122,28 @@ class MainActivity : AppCompatActivity(), ISongController {
         editingSongIdx = -1
     }
 
-    override fun handleEditedSong(song: Song) {
-        songs.replace(editingSongIdx, song)
+    override val coroutineContext: CoroutineContext
+        get() = lifecycleScope.coroutineContext
 
-        if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            findNavController(R.id.nav_host_fragment)
-                .popBackStack()
-        } else {
-            recyclerView.adapter?.notifyItemChanged(editingSongIdx)
+    override suspend fun handleEditedSong(song: Song) {
+        showSpinner()
+        try {
+            songs.replace(editingSongIdx, song)
+            if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                findNavController(R.id.nav_host_fragment)
+                    .popBackStack()
+            } else {
+                recyclerView.adapter?.notifyItemChanged(editingSongIdx)
+            }
+
+            clearEditingSong()
+        } catch (e: Exception) {
+            Log.e(TAG, "Error: ${e.message}")
+            Toast.makeText(this, "Failed to update song", Toast.LENGTH_SHORT).show()
+            throw e
+        } finally {
+            hideSpinner()
         }
-
-        clearEditingSong()
     }
 
     override lateinit var songs: ISongRepository
@@ -104,5 +157,12 @@ class MainActivity : AppCompatActivity(), ISongController {
         songs = SongDatabaseRepository(this)
     }
 
-    // TODO - 5. onStop, cancel any active coroutines
+    override fun onStop() {
+        super.onStop()
+        this.cancel()
+    }
+
+    companion object {
+        val TAG = MainActivity::class.java.simpleName
+    }
 }

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import edu.towson.cosc435.labsapp.interfaces.ISongController
 import edu.towson.cosc435.labsapp.models.Song
 import kotlinx.android.synthetic.main.song_view.view.*
+import kotlinx.coroutines.launch
 
 class SongsAdapter(private val controller: ISongController) : RecyclerView.Adapter<SongViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
@@ -15,17 +16,30 @@ class SongsAdapter(private val controller: ISongController) : RecyclerView.Adapt
 
         view.deleteButton.setOnClickListener {
             val position = viewHolder.adapterPosition
-            // TODO - 11. launch coroutine
-            // TODO - 12. surround in try/catch (change alpha while trying and restore on catch)
-            controller.deleteSong(position)
-            this.notifyItemRemoved(position)
+            controller.launch{
+                try {
+                    view.alpha = 0.5f
+                    controller.deleteSong(position)
+                    this@SongsAdapter.notifyItemRemoved(position)
+
+                } catch (e: Exception) {
+                    view.alpha = 1.0f
+                }
+            }
         }
         view.isAwesomeCb.setOnClickListener {
             val position = viewHolder.adapterPosition
-            // TODO - 13. launch coroutine
-            // TODO - 14. surround in try/catch (change alpha while trying and restore on catch)
-            controller.toggleAwesome(position)
-            this.notifyItemChanged(position)
+            view.alpha = 0.5f
+            controller.launch{
+                try {
+                    controller.toggleAwesome(position)
+                } catch (e: Exception) {
+
+                } finally {
+                    view.alpha = 1.0f
+                    this@SongsAdapter.notifyItemChanged(position)
+                }
+            }
         }
         view.setOnClickListener {
             val position = viewHolder.adapterPosition
