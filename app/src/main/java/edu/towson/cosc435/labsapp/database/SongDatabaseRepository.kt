@@ -8,7 +8,6 @@ import kotlinx.coroutines.delay
 import java.lang.Exception
 
 class SongDatabaseRepository(ctx: Context) : ISongRepository {
-    // TODO - 17. Add 2000 ms delay to all methods and run on IO dispatcher
     private val songList: MutableList<Song> = mutableListOf()
     private val db: SongDatabase
 
@@ -17,10 +16,7 @@ class SongDatabaseRepository(ctx: Context) : ISongRepository {
             ctx,
             SongDatabase::class.java,
             "songs.db"
-        ).allowMainThreadQueries().build()
-        // TODO - 15. Remove allowMainThreadQueries
-        // TODO - 16. Lazily fill the song list (can't refresh here)
-        refreshSongList()
+        ).build()
     }
 
     override fun getCount(): Int {
@@ -31,32 +27,38 @@ class SongDatabaseRepository(ctx: Context) : ISongRepository {
         return songList.get(idx)
     }
 
-    override fun getAll(): List<Song> {
+    override suspend fun getAll(): List<Song> {
+        if(songList.size == 0) {
+            refreshSongList()
+        }
         return songList
     }
 
-    override fun remove(song: Song) {
+    override suspend fun remove(song: Song) {
+        delay(2000)
         // this will throw an exception randomly
         if (System.currentTimeMillis() % 2 == 0L) throw Exception()
         db.songDao().deleteSong(song)
         refreshSongList()
     }
 
-    override fun replace(idx: Int, song: Song) {
+    override suspend fun replace(idx: Int, song: Song) {
+        delay(2000)
         // this will throw an exception randomly
         if (System.currentTimeMillis() % 2 == 0L) throw Exception()
         db.songDao().updateSong(song)
         refreshSongList()
     }
 
-    override fun addSong(song: Song) {
+    override suspend fun addSong(song: Song) {
+        delay(2000)
         // this will throw an exception randomly
         if (System.currentTimeMillis() % 2 == 0L) throw Exception()
         db.songDao().addSong(song)
         refreshSongList()
     }
 
-    private fun refreshSongList() {
+    private suspend fun refreshSongList() {
         songList.clear()
         val songs = db.songDao().getAllSongs()
         songList.addAll(songs)

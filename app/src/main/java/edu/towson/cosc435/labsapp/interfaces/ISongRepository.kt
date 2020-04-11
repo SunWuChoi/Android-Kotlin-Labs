@@ -11,8 +11,8 @@ import edu.towson.cosc435.labsapp.models.Song
 interface ISongRepository {
     fun getCount(): Int
     fun getSong(idx: Int): Song
-    fun getAll(): List<Song>
-    fun remove(song: Song)
-    fun replace(idx: Int, song: Song)
-    fun addSong(song: Song)
+    suspend fun getAll(): List<Song>
+    suspend fun remove(song: Song)
+    suspend fun replace(idx: Int, song: Song)
+    suspend fun addSong(song: Song)
 }

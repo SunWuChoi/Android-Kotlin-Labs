@@ -14,6 +14,7 @@ import edu.towson.cosc435.labsapp.SongsAdapter
 import edu.towson.cosc435.labsapp.interfaces.ISongController
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_song_list.*
+import kotlinx.coroutines.launch
 import java.lang.Exception
 
 /**
@@ -50,5 +51,12 @@ class SongListFragment : Fragment() {
         add_song_btn?.setOnClickListener { songController.launchNewSongScreen() }
     }
 
-    // TODO - 6. onResume, refresh adapter
+    override fun onResume() {
+        super.onResume()
+
+        songController.launch {
+            songController.songs.getAll()
+            recyclerView?.adapter?.notifyDataSetChanged()
+        }
+    }
 }

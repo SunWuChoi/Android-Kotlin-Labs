@@ -4,20 +4,19 @@ import androidx.room.*
 import edu.towson.cosc435.labsapp.models.Song
 import java.util.*
 
-// TODO - 1. Make every method in SongDao a 'suspend' method
 @Dao
 interface SongDao {
     @Insert
-    fun addSong(song: Song)
+    suspend fun addSong(song: Song)
 
     @Update
-    fun updateSong(song: Song)
+    suspend fun updateSong(song: Song)
 
     @Delete
-    fun deleteSong(song: Song)
+    suspend fun deleteSong(song: Song)
 
     @Query("select id, name, artist, track_num, is_awesome from Song")
-    fun getAllSongs(): List<Song>
+    suspend fun getAllSongs(): List<Song>
 }
 
 class UUIDConverter {
