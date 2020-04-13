@@ -15,7 +15,7 @@ interface SongDao {
     @Delete
     suspend fun deleteSong(song: Song)
 
-    @Query("select id, name, artist, track_num, is_awesome from Song")
+    @Query("select id, name, artist, track_num, is_awesome, icon_url from Song")
     suspend fun getAllSongs(): List<Song>
 }
 
@@ -31,7 +31,7 @@ class UUIDConverter {
     }
 }
 
-@Database(entities = arrayOf(Song::class), version = 1, exportSchema = false)
+@Database(entities = arrayOf(Song::class), version = 2, exportSchema = false)
 @TypeConverters(UUIDConverter::class)
 abstract class SongDatabase : RoomDatabase() {
     abstract fun songDao(): SongDao

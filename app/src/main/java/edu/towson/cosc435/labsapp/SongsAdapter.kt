@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import edu.towson.cosc435.labsapp.interfaces.ISongController
 import edu.towson.cosc435.labsapp.models.Song
 import kotlinx.android.synthetic.main.song_view.view.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SongsAdapter(private val controller: ISongController) : RecyclerView.Adapter<SongViewHolder>() {
@@ -54,17 +55,23 @@ class SongsAdapter(private val controller: ISongController) : RecyclerView.Adapt
 
     override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
         val song = controller.songs.getSong(position)
-        holder.bindSong(song)
+        holder.bindSong(controller, song)
     }
 }
 
 class SongViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    fun bindSong(song: Song) {
+    fun bindSong(controller: ISongController, song: Song) {
         itemView.songName.text = song.name
         itemView.songArtist.text = song.artist
         itemView.songTrackNum.text = song.trackNum.toString()
         itemView.isAwesomeCb.isChecked = song.isAwesome
-        // TODO - 5. Call the fetchIcon method from your api class
-        // TODO - 6. Display a spinner until the url is returned
+        itemView.iconProgress.visibility = View.VISIBLE
+        itemView.songIconImage.visibility = View.INVISIBLE
+        controller.launch(Dispatchers.Main) {
+            val bitmap = controller.fetchIcon(song.iconUrl)
+            itemView.songIconImage.setImageBitmap(bitmap)
+            itemView.iconProgress.visibility = View.INVISIBLE
+            itemView.songIconImage.visibility = View.VISIBLE
+        }
     }
 }

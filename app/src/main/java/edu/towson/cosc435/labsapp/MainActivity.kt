@@ -3,6 +3,8 @@ package edu.towson.cosc435.labsapp
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -18,14 +20,42 @@ import edu.towson.cosc435.labsapp.fragments.SongListFragment
 import edu.towson.cosc435.labsapp.interfaces.ISongController
 import edu.towson.cosc435.labsapp.interfaces.ISongRepository
 import edu.towson.cosc435.labsapp.models.Song
+import edu.towson.cosc435.labsapp.network.ISongApi
+import edu.towson.cosc435.labsapp.network.SongApi
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_song_list.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 import kotlin.coroutines.CoroutineContext
 
 class MainActivity : AppCompatActivity(), ISongController {
+    override suspend fun checkCache(icon: String): Bitmap? {
+        val file = File(cacheDir, icon)
+        if(file.exists()){
+            val input = file.inputStream()
+            return BitmapFactory.decodeStream(input)
+        } else {
+            return null
+        }
+    }
+
+    override suspend fun cacheIcon(filename: String, icon: Bitmap) {
+        val file = File(cacheDir, filename)
+        val output = file.outputStream()
+        icon.compress(Bitmap.CompressFormat.JPEG, 100, output)
+    }
+
+    override suspend fun fetchSongs(): List<Song> {
+        return songApi.fetchSongs().await()
+    }
+
+    override suspend fun fetchIcon(url: String): Bitmap {
+        return songApi.fetchIcon(url).await()
+    }
+
     private fun showSpinner() {
         progressBar.visibility = View.VISIBLE
     }
@@ -143,14 +173,25 @@ class MainActivity : AppCompatActivity(), ISongController {
     override lateinit var songs: ISongRepository
     private var editingSong: Song? = null
     private var editingSongIdx: Int = -1
+    private lateinit var songApi: ISongApi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        songApi = SongApi(this)
+
         songs = SongDatabaseRepository(this)
 
-        // TODO - 7. Make the call to get the list of songs. If a song doesn't exist in your db, add it.
+        launch {
+            val songListAPI = fetchSongs()
+            val songListDB = songs.getAll()
+            songListAPI.forEach{ songAPI ->
+                if(songListDB.firstOrNull{ songDB -> songDB.id == songAPI.id} == null) {
+                    songs.addSong(songAPI)
+                }
+            }
+        }
     }
 
     override fun onStop() {
@@ -162,8 +203,4 @@ class MainActivity : AppCompatActivity(), ISongController {
         val TAG = MainActivity::class.java.simpleName
     }
 
-    // TODO - 1. Create a new class for fetching songs from https://my-json-server.typicode.com/rvalis-towson/lab_api/songs
-    // TODO - 2. Create a method for fetching and deserializing the Song list
-    // TODO - 3. Create a method for fetching a single song's icon
-    // TODO - 4. Add support methods for caching the icon image and retrieving the image
 }
