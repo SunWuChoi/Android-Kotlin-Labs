@@ -85,7 +85,8 @@ class AddSongFragment : Fragment() {
             name = songNameEt.editableText.toString(),
             artist = songArtistEt.editableText.toString(),
             isAwesome = songIsAwesomeCb.isChecked,
-            trackNum = trackNum
+            trackNum = trackNum,
+            iconUrl = ""
         )
 
         songController.launch {

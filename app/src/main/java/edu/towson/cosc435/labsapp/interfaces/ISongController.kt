@@ -1,5 +1,6 @@
 package edu.towson.cosc435.labsapp.interfaces
 
+import android.graphics.Bitmap
 import edu.towson.cosc435.labsapp.models.Song
 import kotlinx.coroutines.CoroutineScope
 
@@ -13,6 +14,10 @@ interface ISongController : CoroutineScope {
     suspend fun toggleAwesome(idx: Int)
     suspend fun addNewSong(song: Song)
     suspend fun handleEditedSong(song: Song)
+    suspend fun fetchSongs(): List<Song>
+    suspend fun fetchIcon(url: String): Bitmap
+    suspend fun checkCache(icon: String): Bitmap?
+    suspend fun cacheIcon(filename: String, icon: Bitmap)
     fun launchNewSongScreen()
     val songs: ISongRepository
     fun editSong(idx: Int)

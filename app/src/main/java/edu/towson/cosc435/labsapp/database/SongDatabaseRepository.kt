@@ -51,9 +51,6 @@ class SongDatabaseRepository(ctx: Context) : ISongRepository {
     }
 
     override suspend fun addSong(song: Song) {
-        delay(2000)
-        // this will throw an exception randomly
-        if (System.currentTimeMillis() % 2 == 0L) throw Exception()
         db.songDao().addSong(song)
         refreshSongList()
     }
