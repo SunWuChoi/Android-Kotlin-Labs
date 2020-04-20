@@ -1,6 +1,11 @@
 package edu.towson.cosc435.labsapp
 
 import android.app.Activity
+import android.app.NotificationManager
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Bitmap
@@ -10,7 +15,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.core.app.NotificationManagerCompat
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.observe
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
@@ -192,6 +200,25 @@ class MainActivity : AppCompatActivity(), ISongController {
                 }
             }
         }
+
+        val scheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+        val jobInfo = JobInfo.Builder(JOB_ID, ComponentName(this, SongsService::class.java))
+        jobInfo.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+        jobInfo.setMinimumLatency(15* 1000)
+        scheduler.schedule(jobInfo.build())
+
+
+        MessageQueue.Channel.observe(this, { song ->
+            Log.d(TAG, "Recieved new song from SongsService: $song")
+            NotificationManagerCompat.from(this).cancel(SongsService.NOTIF_ID)
+            launch(Dispatchers.IO) {
+                (songs as SongDatabaseRepository).refreshSongList()
+                withContext(Dispatchers.Main) {
+                    recyclerView.adapter?.notifyDataSetChanged()
+                }
+            }
+        })
+
     }
 
     override fun onStop() {
@@ -201,14 +228,9 @@ class MainActivity : AppCompatActivity(), ISongController {
 
     companion object {
         val TAG = MainActivity::class.java.simpleName
+        val JOB_ID = 1
     }
-
-    // TODO - 1. Create a new JobService subclass called SongsService
-    // TODO - 2. Schedule the Job using the JobScheduler service. Set needs network and latency (15seconds)
-    // TODO - 3. In your Service, simulate fetching a new song from the Song web api. Simply insert a new record in your database.
-    // TODO - 4. Signal to the user, that new songs are available by either, refreshing the list, or displaying a Notification.
-    // TODO - 5. Create a notification channel.
-    // TODO - 6. Create a notification with a PendingIntent
+    
     // TODO - 7. Subclass Application and implement Application.ActivityLifecycleCallbacks
     // TODO - 8. Using a LiveData object, only refresh the list if the MainActivity is visible
 }
