@@ -28,7 +28,10 @@ class MainActivity : AppCompatActivity(), IController {
         readContentProvider()
 
         pick_person_btn.setOnClickListener {
-            // TODO - 3. launch the picker activity
+            val intent = Intent()
+            intent.action = Intent.ACTION_PICK
+            intent.type = PersonContract.Person.CONTENT_TYPE
+            startActivityForResult(intent, REQUEST_CODE)
         }
     }
 
@@ -38,7 +41,8 @@ class MainActivity : AppCompatActivity(), IController {
             REQUEST_CODE -> {
                 when(resultCode) {
                     Activity.RESULT_OK -> {
-                        // TODO - 4. Handle the picker result
+                        val name = data?.getStringExtra(PersonContract.PERSON_NAME_EXTRA)
+                        picker_result_tv.text = name
                     }
                 }
             }
@@ -46,7 +50,23 @@ class MainActivity : AppCompatActivity(), IController {
     }
 
     fun readContentProvider() {
-        // TODO - 1. query the content provider and populate the person list
+        val contentResolver = getContentResolver()
+        val uri = PersonContract.Person.CONTENT_URI
+        val proj = PersonContract.Person.PROJECTION_ALL
+        val sort = PersonContract.Person.SORT_ORDER_DEFAULT
+        val cursor = contentResolver.query(uri, proj, "", arrayOf<String>(), sort )
+            if(cursor != null) {
+                if(cursor.count > 0){
+                    while(cursor.moveToNext()){
+                        val name = cursor.getString(cursor.getColumnIndex(PersonContract.Person.NAME))
+                        val age = cursor.getInt(cursor.getColumnIndex(PersonContract.Person.AGE))
+                        val person = Person(name,age)
+                        mutablePeople.add(person)
+                    }
+                    recyclerView.adapter?.notifyDataSetChanged()
+                }
+                cursor.close()
+            }
     }
 
     companion object {
