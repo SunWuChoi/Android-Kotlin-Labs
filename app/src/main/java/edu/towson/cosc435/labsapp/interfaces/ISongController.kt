@@ -23,4 +23,5 @@ interface ISongController : CoroutineScope {
     fun editSong(idx: Int)
     fun getSongForEdit(): Song?
     fun clearEditingSong()
+    fun queryMediaStore()
 }

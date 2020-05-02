@@ -4,6 +4,7 @@ package edu.towson.cosc435.labsapp.fragments
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -46,6 +47,9 @@ class AddSongFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         addSongBtn.setOnClickListener { handleAddSongClick() }
+
+        // TODO - 5. add a click listener for the new albumArtBtn
+        // TODO - 6. in the listener, call the new interface method on the songController for querying the MediaStore
 
         val song = songController.getSongForEdit()
         populateSongForm(song)
@@ -119,5 +123,9 @@ class AddSongFragment : Fragment() {
             id = editSong.id
         }
         return id
+    }
+
+    fun showAlbumArt(uri: Uri) {
+        // TODO - 4. Using the uri, display the bitmap in the albumArtImg ImageView
     }
 }

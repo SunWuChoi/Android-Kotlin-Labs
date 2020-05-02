@@ -1,6 +1,10 @@
 package edu.towson.cosc435.labsapp
 
 import android.app.Activity
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Bitmap
@@ -10,7 +14,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.getSystemService
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.observe
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
@@ -123,6 +131,11 @@ class MainActivity : AppCompatActivity(), ISongController {
         editingSongIdx = -1
     }
 
+    override fun queryMediaStore() {
+        // TODO - 2. Ask for permission to read external storage
+        // TODO - 3. query the media store and pass the first URI to your AddSongFragment to display
+    }
+
     override val coroutineContext: CoroutineContext
         get() = lifecycleScope.coroutineContext
 
@@ -174,6 +187,7 @@ class MainActivity : AppCompatActivity(), ISongController {
     private var editingSong: Song? = null
     private var editingSongIdx: Int = -1
     private lateinit var songApi: ISongApi
+    // TODO - 10. Add a reference to the receiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -182,6 +196,8 @@ class MainActivity : AppCompatActivity(), ISongController {
         songApi = SongApi(this)
 
         songs = SongDatabaseRepository(this)
+
+        // TODO - 11. create the receiver
 
         launch {
             val songListAPI = fetchSongs()
@@ -192,6 +208,23 @@ class MainActivity : AppCompatActivity(), ISongController {
                 }
             }
         }
+
+        val scheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+        val jobInfo = JobInfo.Builder(JOB_ID, ComponentName(this, SongsService::class.java))
+        jobInfo.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+        jobInfo.setMinimumLatency(15 * 1000)
+        scheduler.schedule(jobInfo.build())
+
+        MessageQueue.Channel.observe(this, { song ->
+            Log.d(TAG, "Received new song from SongsService: $song")
+            NotificationManagerCompat.from(this).cancel(SongsService.NOTIF_ID)
+            launch(Dispatchers.IO) {
+                (songs as SongDatabaseRepository).refreshSongList()
+                withContext(Dispatchers.Main) {
+                    recyclerView.adapter?.notifyDataSetChanged()
+                }
+            }
+        })
     }
 
     override fun onStop() {
@@ -201,14 +234,11 @@ class MainActivity : AppCompatActivity(), ISongController {
 
     companion object {
         val TAG = MainActivity::class.java.simpleName
+        val JOB_ID = 1
     }
 
-    // TODO - 1. Create a new JobService subclass called SongsService
-    // TODO - 2. Schedule the Job using the JobScheduler service. Set needs network and latency (15seconds)
-    // TODO - 3. In your Service, simulate fetching a new song from the Song web api. Simply insert a new record in your database.
-    // TODO - 4. Signal to the user, that new songs are available by either, refreshing the list, or displaying a Notification.
-    // TODO - 5. Create a notification channel.
-    // TODO - 6. Create a notification with a PendingIntent
-    // TODO - 7. Subclass Application and implement Application.ActivityLifecycleCallbacks
-    // TODO - 8. Using a LiveData object, only refresh the list if the MainActivity is visible
+    // TODO - 1. Override onRequestPermissionResult and handle the permissions
+    // TODO - 8. Create a new BroadcastReceiver class to receive a new event
+    // TODO - 9. In the broadcast receiver's onReceive method, call the "launchNewSongScreen" method
+    // TODO - 12. Register and unregister your broadcast receiver
 }

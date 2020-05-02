@@ -55,7 +55,7 @@ class SongDatabaseRepository(ctx: Context) : ISongRepository {
         refreshSongList()
     }
 
-    private suspend fun refreshSongList() {
+    suspend fun refreshSongList() {
         songList.clear()
         val songs = db.songDao().getAllSongs()
         songList.addAll(songs)
