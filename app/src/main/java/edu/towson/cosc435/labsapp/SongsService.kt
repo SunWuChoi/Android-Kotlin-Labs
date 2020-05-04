@@ -40,9 +40,9 @@ class SongsService : JobService(), CoroutineScope {
             repo.addSong(song)
             val notif = createNotification()
             NotificationManagerCompat.from(this@SongsService).notify(NOTIF_ID, notif)
-            MessageQueue.Channel.postValue(song)
-            // TODO - 13. comment out the MessageQueue
-            // TODO - 14. send a broadcast that will be received by your broadcast receiver
+            //MessageQueue.Channel.postValue(song)
+
+            sendBroadcast(Intent(MyReceiver.IMAGE_ACTION))
         }
 
         return true

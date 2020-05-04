@@ -3,18 +3,20 @@ package edu.towson.cosc435.labsapp
 import android.app.Activity
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
+import android.content.*
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -37,6 +39,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.util.jar.Manifest
 import kotlin.coroutines.CoroutineContext
 
 class MainActivity : AppCompatActivity(), ISongController {
@@ -132,9 +135,44 @@ class MainActivity : AppCompatActivity(), ISongController {
     }
 
     override fun queryMediaStore() {
-        // TODO - 2. Ask for permission to read external storage
-        // TODO - 3. query the media store and pass the first URI to your AddSongFragment to display
+        if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if(ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.READ_EXTERNAL_STORAGE)){
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
+                    PERMISSION_REQUEST
+                )
+            } else {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
+                    PERMISSION_REQUEST
+                )
+            }
+        } else {
+            doQueryMediaStore()
+        }
     }
+
+    private fun doQueryMediaStore(){
+        val resolver = contentResolver
+        val project = arrayOf(MediaStore.Images.Media._ID, MediaStore.Images.Media.DISPLAY_NAME)
+        val cursor = resolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, project, null, null, null)
+        if(cursor != null) {
+            if (cursor.moveToNext()){
+                val id = cursor.getLong(0)
+                val name = cursor.getString(1)
+                val uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+                Log.d(TAG, "ID: $id, Name: $name, Uri: $uri")
+                val frag = supportFragmentManager
+                    .fragments[0]
+                    .childFragmentManager
+                    .fragments[0] as AddSongFragment?
+                frag?.showAlbumArt(uri)
+            }
+        }
+    }
+
 
     override val coroutineContext: CoroutineContext
         get() = lifecycleScope.coroutineContext
@@ -187,7 +225,7 @@ class MainActivity : AppCompatActivity(), ISongController {
     private var editingSong: Song? = null
     private var editingSongIdx: Int = -1
     private lateinit var songApi: ISongApi
-    // TODO - 10. Add a reference to the receiver
+    private lateinit var receiver: MyReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -197,7 +235,7 @@ class MainActivity : AppCompatActivity(), ISongController {
 
         songs = SongDatabaseRepository(this)
 
-        // TODO - 11. create the receiver
+        receiver = MyReceiver(this)
 
         launch {
             val songListAPI = fetchSongs()
@@ -235,10 +273,32 @@ class MainActivity : AppCompatActivity(), ISongController {
     companion object {
         val TAG = MainActivity::class.java.simpleName
         val JOB_ID = 1
+        val PERMISSION_REQUEST = 1
     }
 
-    // TODO - 1. Override onRequestPermissionResult and handle the permissions
-    // TODO - 8. Create a new BroadcastReceiver class to receive a new event
-    // TODO - 9. In the broadcast receiver's onReceive method, call the "launchNewSongScreen" method
-    // TODO - 12. Register and unregister your broadcast receiver
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode) {
+            PERMISSION_REQUEST -> {
+                if (permissions[0] == android.Manifest.permission.READ_EXTERNAL_STORAGE) {
+                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                        doQueryMediaStore()
+                    }
+                }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        unregisterReceiver(receiver)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        registerReceiver(receiver, IntentFilter(MyReceiver.IMAGE_ACTION))
+    }
 }

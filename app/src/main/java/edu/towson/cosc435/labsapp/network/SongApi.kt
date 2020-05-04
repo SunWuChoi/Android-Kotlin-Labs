@@ -80,6 +80,7 @@ class SongApi(val controller: ISongController): ISongApi {
         val urlObj = URL(url)
         val query = urlObj.query
         val filename = query.replace("=", "")
+        System.out.println(filename.plus(".jpg"))
         return filename.plus(".jpg")
     }
 }
