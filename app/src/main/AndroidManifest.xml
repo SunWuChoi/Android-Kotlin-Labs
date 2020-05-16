@@ -9,6 +9,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".TaskNineBActivity"></activity>
+        <activity android:name=".TaskElevenActivity" />
+        <activity android:name=".TaskTenActivity" />
+        <activity android:name=".TaskNineActivity" />
+        <activity android:name=".TaskEightActivity" />
+        <activity android:name=".TaskSevenActivity" />
+        <activity android:name=".TaskSixActivity" />
+        <activity android:name=".TaskTwoActivity" />
+        <activity android:name=".TaskFiveActivity" />
+        <activity android:name=".TaskFourActivity" />
+        <activity android:name=".TaskThreeActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
