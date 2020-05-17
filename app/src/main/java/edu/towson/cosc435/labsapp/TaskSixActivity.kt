@@ -41,7 +41,7 @@ class TaskSixActivity : AppCompatActivity() {
 
     private fun showNotification(id: Int, progress: Int) {
         val builder = NotificationCompat.Builder(this, NOTIF_ID)
-        builder.setContentTitle("Hello from ExampleService (${id})")
+        builder.setContentTitle("Hello from Task Six!")
             .setContentText("Click this notification to launch the Activity")
             .setSmallIcon(android.R.drawable.btn_dialog)
             .setVibrate(longArrayOf(1000L))
