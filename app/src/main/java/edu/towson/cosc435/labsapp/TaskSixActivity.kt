@@ -11,6 +11,11 @@ import android.os.Bundle
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import kotlinx.android.synthetic.main.activity_task_six.*
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+
+
 
 class TaskSixActivity : AppCompatActivity() {
 
@@ -20,6 +25,14 @@ class TaskSixActivity : AppCompatActivity() {
 
         createNotificationChannel()
         showNotification(1, 100)
+
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        taskSixBtn.setOnClickListener {
+            notificationManager.cancel(1)
+        }
+
     }
 
     private fun createNotificationChannel() {
@@ -40,6 +53,8 @@ class TaskSixActivity : AppCompatActivity() {
     }
 
     private fun showNotification(id: Int, progress: Int) {
+        val intent = Intent(this, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
         val builder = NotificationCompat.Builder(this, NOTIF_ID)
         builder.setContentTitle("Hello from Task Six!")
             .setContentText("Click this notification to launch the Activity")
@@ -48,6 +63,7 @@ class TaskSixActivity : AppCompatActivity() {
             .setProgress(10, progress, false)
             .setTicker("Hello World")
             .setAutoCancel(true) // make sure the notification closes on click
+            .setContentIntent(pendingIntent)
         val notification = builder.build()
         NotificationManagerCompat.from(this).notify(id, notification)
     }

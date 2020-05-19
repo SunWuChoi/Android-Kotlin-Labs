@@ -9,5 +9,11 @@ class TaskThreeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_three)
+
+
+        taskThreeBtn.setOnClickListener {
+
+            TheTextView.text = "COSC435"
+        }
     }
 }

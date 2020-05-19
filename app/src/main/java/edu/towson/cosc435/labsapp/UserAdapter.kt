@@ -10,7 +10,20 @@ class UserAdapter(val controller: IController) : RecyclerView.Adapter<UserViewHo
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.user_view, parent, false)
         val holder = UserViewHolder(view)
-        // TODO - Long press
+
+
+
+        view.setOnLongClickListener {
+
+            val position = holder.adapterPosition
+            controller.deleteAt(position)
+            this@UserAdapter.notifyItemRemoved(position)
+
+            true
+        }
+
+
+
         return holder
     }
 
@@ -19,7 +32,11 @@ class UserAdapter(val controller: IController) : RecyclerView.Adapter<UserViewHo
     }
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
-        // TODO - Display each users' name and age
+        val user = controller.users.get(position)
+
+        holder.itemView.user_name_tv.text = user.name
+        holder.itemView.user_age_tv.text = user.age.toString()
+
     }
 }
 

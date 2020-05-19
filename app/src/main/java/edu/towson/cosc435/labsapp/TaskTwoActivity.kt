@@ -9,6 +9,7 @@ data class User(val name: String, val age: Int)
 
 interface IController {
     val users: List<User>
+    fun deleteAt(pos: Int)
 }
 
 class TaskTwoActivity : AppCompatActivity(), IController {
@@ -19,5 +20,17 @@ class TaskTwoActivity : AppCompatActivity(), IController {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_two)
+
+
+
+        recyclerView.adapter = UserAdapter(this)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+
+    }
+
+    override fun deleteAt(pos: Int){
+        users.removeAt(pos)
+
     }
 }

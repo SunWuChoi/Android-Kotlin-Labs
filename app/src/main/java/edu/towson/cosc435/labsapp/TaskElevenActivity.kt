@@ -2,11 +2,10 @@ package edu.towson.cosc435.labsapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.lifecycleScope
 import kotlinx.android.synthetic.main.activity_task_eleven.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import java.lang.Exception
 
 class TaskElevenActivity : AppCompatActivity() {
 
@@ -14,8 +13,15 @@ class TaskElevenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_eleven)
 
-        GlobalScope.launch(Dispatchers.IO) {
-            updateTextView()
+        lifecycleScope.launch {
+            try {
+                withContext(Dispatchers.Main){
+                    updateTextView()
+                }
+            }catch (e : Exception){
+
+            }
+
         }
     }
 

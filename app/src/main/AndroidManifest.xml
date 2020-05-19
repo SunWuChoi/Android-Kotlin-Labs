@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.towson.cosc435.labsapp">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -15,10 +17,11 @@
         <activity android:name=".TaskEightActivity" />
         <activity android:name=".TaskSevenActivity" />
         <activity android:name=".TaskSixActivity" />
-        <activity android:name=".TaskTwoActivity" />
         <activity android:name=".TaskFiveActivity" />
         <activity android:name=".TaskFourActivity" />
         <activity android:name=".TaskThreeActivity" />
+        <activity android:name=".TaskTwoActivity" />
+        <activity android:name=".TaskOneActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
